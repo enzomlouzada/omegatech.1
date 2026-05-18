@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lista Inteligente</title>
+
+<style>
+
+    body{
+        font-family: Arial, sans-serif;
+        background-color: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .container{
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        width: 450px;
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+        text-align: center;
+    }
+
+    input{
+        width: 70%;
+        padding: 10px;
+    }
+
+    button{
+        padding: 10px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    ul{
+        list-style: none;
+        padding: 0;
+        margin-top: 20px;
+    }
+
+    li{
+        background: #eee;
+        margin-top: 10px;
+        padding: 15px;
+        border-radius: 5px;
+        text-align: left;
+    }
+
+    .data{
+        font-size: 12px;
+        color: gray;
+        margin-top: 5px;
+    }
+
+    .lugar{
+        margin-top: 10px;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .remover{
+        margin-top: 10px;
+        background: red;
+        color: white;
+        border: none;
+        padding: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Lista Inteligente</h1>
+
+    <input type="text" id="tarefa" placeholder="Digite um ou mais itens (ex: refri, celular)">
+    <button onclick="adicionarTarefa()">Adicionar</button>
+
+    <ul id="lista"></ul>
+
+</div>
+
+<script>
+
+function adicionarTarefa(){
+
+    let input = document.getElementById("tarefa");
+    let texto = input.value.toLowerCase();
+
+    if(texto === ""){
+        alert("Digite um item!");
+        return;
+    }
+
+    let lista = document.getElementById("lista");
+
+    // separa vários itens digitados (ex: "refri celular arroz")
+    let itens = texto.split(" ");
+
+    let data = new Date();
+    let dia = data.toLocaleDateString("pt-BR");
+    let hora = data.toLocaleTimeString("pt-BR");
+
+    itens.forEach(itemTexto => {
+
+        let item = document.createElement("li");
+
+        let sugestao = "";
+
+        // regra inteligente por item
+        if(
+            itemTexto.includes("celular") ||
+            itemTexto.includes("notebook") ||
+            itemTexto.includes("fone") ||
+            itemTexto.includes("tv")
+        ){
+            sugestao = `
+                <b>Comprar online:</b><br>
+                • Mercado Livre<br>
+                • Amazon<br>
+                • Magazine Luiza<br>
+                • Shopee
+            `;
+        }
+        else if(
+            itemTexto.includes("refri") ||
+            itemTexto.includes("refrigerante") ||
+            itemTexto.includes("arroz") ||
+            itemTexto.includes("feijão") ||
+            itemTexto.includes("carne")
+        ){
+            sugestao = `
+                <b>Comprar no supermercado:</b><br>
+                • Carrefour<br>
+                • Assaí Atacadista<br>
+                • Atacadão<br>
+                • BH<br>
+                • Supermercado local
+            `;
+        }
+        else{
+            sugestao = `
+                <b>Local não identificado:</b><br>
+                • Mercado ou loja online
+            `;
+        }
+
+        item.innerHTML = `
+            <strong>${itemTexto}</strong>
+
+            <div class="data">
+                Adicionado em: ${dia} às ${hora}
+            </div>
+
+            <div class="lugar">
+                ${sugestao}
+            </div>
+
+            <button class="remover" onclick="removerTarefa(this)">
+                X
+            </button>
+        `;
+
+        lista.appendChild(item);
+    });
+
+    input.value = "";
+}
+
+function removerTarefa(botao){
+    botao.parentElement.remove();
+}
+
+</script>
+
+</body>
+</html>
